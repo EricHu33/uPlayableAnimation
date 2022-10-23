@@ -4,51 +4,41 @@ using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
 
-public class AnimatorMixerOutput : BaseAnimationOutput
+namespace UPlayable.AnimationMixer
 {
-    public AnimationClip FromClip;
-    public RuntimeAnimatorController animCtrl;
-    [Range(0, 1f)]
-    public float Weight;
-    private AnimationMixerPlayable mixerPlayable;
-    private AnimationClipPlayable fromPlayable;
-    private AnimatorControllerPlayable toPlayable;
-    public Vector2 Direction;
-    protected override Playable ManagerInput => mixerPlayable;
-
-    public bool IsUpdatable()
+    public class AnimatorMixerOutput : BaseAnimationOutput
     {
-        return Id != -1;
-    }
+        public AnimationClip FromClip;
+        public RuntimeAnimatorController animCtrl;
+        [Range(0, 1f)]
+        public float Weight;
+        public Vector2 Direction;
+        protected override Playable m_managerInput => m_mixerPlayable;
+        private AnimationMixerPlayable m_mixerPlayable;
+        private AnimationClipPlayable m_fromPlayable;
+        private AnimatorControllerPlayable m_toPlayable;
 
-    private void OnValidate()
-    {
-        if (IsUpdatable())
+        private void Update()
         {
-            manager.UpdateInputModel(Id, Model);
+            if (!m_mixerPlayable.IsValid())
+                return;
+            Weight = Mathf.Clamp01(Weight);
+            m_mixerPlayable.SetInputWeight(0, 1.0f - Weight);
+            m_mixerPlayable.SetInputWeight(1, Weight);
+            m_animator.SetFloat("Horizontal", Direction.x);
+            m_animator.SetFloat("Vertical", Direction.y);
         }
-    }
 
-    private void Update()
-    {
-        if (!mixerPlayable.IsValid())
-            return;
-        Weight = Mathf.Clamp01(Weight);
-        mixerPlayable.SetInputWeight(0, 1.0f - Weight);
-        mixerPlayable.SetInputWeight(1, Weight);
-        GetComponent<Animator>().SetFloat("Horizontal", Direction.x);
-        GetComponent<Animator>().SetFloat("Vertical", Direction.y);
-    }
+        protected override void CreatePlayables()
+        {
+            m_mixerPlayable = AnimationMixerPlayable.Create(m_manager.PlayableGraph, 2);
+            m_fromPlayable = AnimationClipPlayable.Create(m_manager.PlayableGraph, FromClip);
+            m_toPlayable = AnimatorControllerPlayable.Create(m_manager.PlayableGraph, animCtrl);
+            m_fromPlayable.SetTime(0f);
 
-    protected override void CreatePlayables()
-    {
-        mixerPlayable = AnimationMixerPlayable.Create(manager.playableGraph, 2);
-        fromPlayable = AnimationClipPlayable.Create(manager.playableGraph, FromClip);
-        toPlayable = AnimatorControllerPlayable.Create(manager.playableGraph, animCtrl);
-        fromPlayable.SetTime(0f);
-
-        manager.playableGraph.Connect(fromPlayable, 0, mixerPlayable, 0);
-        manager.playableGraph.Connect(toPlayable, 0, mixerPlayable, 1);
-        m_Id = Animator.StringToHash(FromClip.name + animCtrl.name + Time.time.ToString());
+            m_manager.PlayableGraph.Connect(m_fromPlayable, 0, m_mixerPlayable, 0);
+            m_manager.PlayableGraph.Connect(m_toPlayable, 0, m_mixerPlayable, 1);
+            m_Id = Animator.StringToHash(FromClip.name + animCtrl.name + Time.time.ToString());
+        }
     }
 }

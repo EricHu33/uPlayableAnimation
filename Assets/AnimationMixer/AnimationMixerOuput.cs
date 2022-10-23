@@ -4,58 +4,48 @@ using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
 
-public class AnimationMixerOuput : BaseAnimationOutput
+namespace UPlayable.AnimationMixer
 {
-    public AnimationClip FromClip;
-    public AnimationClip ToClip;
-    [Range(0, 1f)]
-    public float Weight;
-    private AnimationMixerPlayable mixerPlayable;
-    private AnimationClipPlayable fromPlayable;
-    private AnimationClipPlayable toPlayable;
-
-    protected override Playable ManagerInput => mixerPlayable;
-
-    private void OnValidate()
+    public class AnimationMixerOuput : BaseAnimationOutput
     {
-        if (IsUpdatable())
+        public AnimationClip FromClip;
+        public AnimationClip ToClip;
+        [Range(0, 1f)]
+        public float Weight;
+        private AnimationMixerPlayable m_mixerPlayable;
+        private AnimationClipPlayable m_fromPlayable;
+        private AnimationClipPlayable m_toPlayable;
+
+        protected override Playable m_managerInput => m_mixerPlayable;
+
+        private void Update()
         {
-            manager.UpdateInputModel(m_Id, Model);
+            if (!m_mixerPlayable.IsValid())
+                return;
+            Weight = Mathf.Clamp01(Weight);
+            m_mixerPlayable.SetInputWeight(0, 1.0f - Weight);
+            m_mixerPlayable.SetInputWeight(1, Weight);
+            float mixLength = Mathf.Lerp(FromClip.length, ToClip.length, Weight);
+            m_fromPlayable.SetSpeed(FromClip.length / mixLength);
+            m_toPlayable.SetSpeed(ToClip.length / mixLength);
         }
-    }
 
-    private void Update()
-    {
-        if (!mixerPlayable.IsValid())
-            return;
-        Weight = Mathf.Clamp01(Weight);
-        mixerPlayable.SetInputWeight(0, 1.0f - Weight);
-        mixerPlayable.SetInputWeight(1, Weight);
-        float mixLength = Mathf.Lerp(FromClip.length, ToClip.length, Weight);
-        fromPlayable.SetSpeed(FromClip.length / mixLength);
-        toPlayable.SetSpeed(ToClip.length / mixLength);
-    }
-
-    public bool IsUpdatable()
-    {
-        return Id != -1;
-    }
-
-    protected override void CreatePlayables()
-    {
-        mixerPlayable = AnimationMixerPlayable.Create(manager.playableGraph, 2);
-        fromPlayable = AnimationClipPlayable.Create(manager.playableGraph, FromClip);
-        toPlayable = AnimationClipPlayable.Create(manager.playableGraph, ToClip);
-        fromPlayable.SetTime(0f);
-        toPlayable.SetTime(0f);
-
-        manager.playableGraph.Connect(fromPlayable, 0, mixerPlayable, 0);
-        manager.playableGraph.Connect(toPlayable, 0, mixerPlayable, 1);
-        m_Id = Animator.StringToHash(FromClip.name + ToClip.name + Time.time.ToString());
-        if (LayerIndex != 0 && AvatarMask != null)
+        protected override void CreatePlayables()
         {
-            manager.SetLayerAdditive((uint)LayerIndex, false);
-            manager.SetLayerAvatarMask((uint)LayerIndex, AvatarMask);
+            m_mixerPlayable = AnimationMixerPlayable.Create(m_manager.PlayableGraph, 2);
+            m_fromPlayable = AnimationClipPlayable.Create(m_manager.PlayableGraph, FromClip);
+            m_toPlayable = AnimationClipPlayable.Create(m_manager.PlayableGraph, ToClip);
+            m_fromPlayable.SetTime(0f);
+            m_toPlayable.SetTime(0f);
+
+            m_manager.PlayableGraph.Connect(m_fromPlayable, 0, m_mixerPlayable, 0);
+            m_manager.PlayableGraph.Connect(m_toPlayable, 0, m_mixerPlayable, 1);
+            m_Id = Animator.StringToHash(FromClip.name + ToClip.name + Time.time.ToString());
+            if (LayerIndex != 0 && AvatarMask != null)
+            {
+                m_manager.SetLayerAdditive((uint)LayerIndex, false);
+                m_manager.SetLayerAvatarMask((uint)LayerIndex, AvatarMask);
+            }
         }
     }
 }

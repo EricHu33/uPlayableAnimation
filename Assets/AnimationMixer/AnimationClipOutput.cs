@@ -4,76 +4,20 @@ using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
 
-public abstract class BaseAnimationOutput : MonoBehaviour
+namespace UPlayable.AnimationMixer
 {
-    [SerializeField]
-    protected int LayerIndex = 0;
-    [SerializeField]
-    protected AvatarMask AvatarMask;
-    [SerializeField]
-    protected bool IsStatic = false;
-    [SerializeField]
-    protected AnimationOutputModel Model;
-    protected AnimationMixerManager manager;
-    protected int m_Id = -1;
-    public int Id => m_Id;
-    protected abstract Playable ManagerInput { get; }
-
-
-    private void Start()
+    public class AnimationClipOutput : BaseAnimationOutput
     {
-        manager = GetComponentInParent<AnimationMixerManager>();
-        if (IsStatic)
+        public AnimationClip ToClip;
+        private AnimationClipPlayable m_toPlayable;
+        protected override Playable m_managerInput => m_toPlayable;
+
+        protected override void CreatePlayables()
         {
-            CreatePlayables();
-            manager.AddStaticPlayable(m_Id, ManagerInput, Model);
+            m_toPlayable = AnimationClipPlayable.Create(m_manager.PlayableGraph, ToClip);
+            m_toPlayable.SetTime(0f);
+            m_Id = Animator.StringToHash(ToClip.name + Time.time.ToString());
         }
     }
 
-    protected abstract void CreatePlayables();
-    [ContextMenu("Play")]
-    public void Play(bool force = false)
-    {
-        if (!IsStatic)
-        {
-            CreatePlayables();
-            manager.PlayDynamicPlayable(ManagerInput, Model, LayerIndex);
-        }
-        else
-        {
-            manager.Play(m_Id, force, LayerIndex);
-        }
-        if (LayerIndex != 0 && AvatarMask != null)
-        {
-            manager.SetLayerAdditive((uint)LayerIndex, false);
-            manager.SetLayerAvatarMask((uint)LayerIndex, AvatarMask);
-        }
-    }
-}
-
-public class AnimationClipOutput : BaseAnimationOutput
-{
-    public AnimationClip ToClip;
-    private AnimationClipPlayable toPlayable;
-    protected override Playable ManagerInput => toPlayable;
-
-    public bool IsUpdatable()
-    {
-        return m_Id != -1;
-    }
-
-    private void OnValidate()
-    {
-        if (IsUpdatable())
-        {
-            manager.UpdateInputModel(m_Id, Model);
-        }
-    }
-
-    protected override void CreatePlayables()
-    {
-        toPlayable = AnimationClipPlayable.Create(manager.playableGraph, ToClip);
-        toPlayable.SetTime(0f);
-        m_Id = Animator.StringToHash(ToClip.name + Time.time.ToString());
-    }
 }

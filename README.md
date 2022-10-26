@@ -114,6 +114,13 @@ Check the 6th example scene's player control unity-chan and see how it setup.
  
 -----
 
+## TODO
+
+ - Improve the component's custom editor
+ - More example
+ 
+-----
+
 ## License
 
 Code under UPlayableAnimation are MIT. 

@@ -6,7 +6,7 @@ While Unity's animator controller's node base approach is visually straightforwa
 It did not scale well when the number of animation states start to pile up.
 
 This project aim to create scripts that can help to avoid working on ever growing, over complex animator controller in Unity.
-By using Unity's Playable API, we can minimize the usage of animator controller & moving all animation logic into mono behaviour. We can make the whole animation handling logic more reusable/scalable
+By using Unity's [Playables API](https://docs.unity3d.com/Manual/Playables.html), we can minimize the usage of animator controller & moving all animation logic into mono behaviour. We can make the whole animation handling logic more reusable/scalable
 
 Simply drag & drop the provided output component on animated game object. The animator can easily blend into any state at runtime. 
 

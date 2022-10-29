@@ -208,9 +208,33 @@ namespace UPlayable.AnimationMixer
         private List<LayeredPlayablesController> m_layerControllers;
         private List<float> m_targetLayerWeight;
         private List<float> m_smoothedLayerWeight;
+        private int m_targetFrameRate;
+        [SerializeField]
+        private bool m_useCustomFrameRate;
+        [SerializeField]
+        private int m_customFrameRate = 60;
+        private float m_lastEvaluteTime;
+        private void OnValidate()
+        {
+            if (m_customFrameRate <= 1)
+            {
+                m_customFrameRate = 1;
+            }
 
+            if (m_useCustomFrameRate)
+            {
+                m_targetFrameRate = m_customFrameRate;
+            }
+
+        }
         public void Awake()
         {
+            if (m_useCustomFrameRate)
+            {
+                m_targetFrameRate = m_customFrameRate;
+            }
+            m_lastEvaluteTime = Time.time;
+
             m_layerControllers = new List<LayeredPlayablesController>();
             m_smoothedLayerWeight = new List<float>();
             m_targetLayerWeight = new List<float>();
@@ -279,13 +303,26 @@ namespace UPlayable.AnimationMixer
 
         private void Update()
         {
+            var time = Time.time;
+            var deltaTime = Time.deltaTime;
             for (int i = 0; i < m_layerControllers.Count; i++)
             {
-                m_layerControllers[i].OnEvaluate(Time.deltaTime);
-                m_smoothedLayerWeight[i] = Mathf.Lerp(m_smoothedLayerWeight[i], m_targetLayerWeight[i], 1f - Mathf.Exp(-12f * Time.deltaTime));
+                m_layerControllers[i].OnEvaluate(deltaTime);
+                m_smoothedLayerWeight[i] = Mathf.Lerp(m_smoothedLayerWeight[i], m_targetLayerWeight[i], 1f - Mathf.Exp(-12f * deltaTime));
                 m_rootLayerMixerPlayable.SetInputWeight(i, m_smoothedLayerWeight[i]);
             }
-            PlayableGraph.Evaluate(Time.deltaTime);
+
+            if (m_useCustomFrameRate && (time - m_lastEvaluteTime > 1f / m_targetFrameRate))
+            {
+                var diff = time - m_lastEvaluteTime;
+                PlayableGraph.Evaluate(diff);
+                m_lastEvaluteTime = time;
+            }
+            else if (!m_useCustomFrameRate)
+            {
+                m_lastEvaluteTime = Time.time;
+                PlayableGraph.Evaluate(deltaTime);
+            }
         }
 
         private void LateUpdate()

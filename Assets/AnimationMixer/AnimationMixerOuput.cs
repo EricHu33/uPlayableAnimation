@@ -18,6 +18,20 @@ namespace UPlayable.AnimationMixer
 
         protected override Playable m_managerInput => m_mixerPlayable;
 
+        protected override void ParseSettingToModel()
+        {
+            m_model = new AnimationOutputModel
+            {
+                IsAnimatorPlayable = false,
+                ClipLength = ToClip.length,
+                OutputTargetWeight = TransitionSetting.OutputTargetWeight,
+                FadeInTime = TransitionSetting.FadeInTime,
+                ExitTime = TransitionSetting.ExitTime,
+                RestartWhenPlay = TransitionSetting.RestartWhenPlay,
+                Speed = TransitionSetting.ClipSpeed,
+            };
+        }
+
         private void Update()
         {
             if (!m_mixerPlayable.IsValid())
@@ -25,9 +39,12 @@ namespace UPlayable.AnimationMixer
             Weight = Mathf.Clamp01(Weight);
             m_mixerPlayable.SetInputWeight(0, 1.0f - Weight);
             m_mixerPlayable.SetInputWeight(1, Weight);
-            float mixLength = Mathf.Lerp(FromClip.length, ToClip.length, Weight);
+            var mixLength = Mathf.Lerp(FromClip.length, ToClip.length, Weight);
             m_fromPlayable.SetSpeed(FromClip.length / mixLength);
             m_toPlayable.SetSpeed(ToClip.length / mixLength);
+
+            m_model.ClipLength = mixLength;
+            m_manager.UpdateInputModel(m_Id, m_model, LayerIndex);
         }
 
         protected override void CreatePlayables()

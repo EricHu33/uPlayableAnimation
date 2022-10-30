@@ -9,9 +9,12 @@ namespace UPlayable.AnimationMixer
     [System.Serializable]
     public struct AnimationOutputModel
     {
+        public bool IsAnimatorPlayable;
+        public float ClipLength;
         public float OutputTargetWeight;
         public float FadeInTime;
         public float ExitTime;
+        public float Speed;
         [Header("(non-static clip will always restart)")]
         public bool RestartWhenPlay;
     }
@@ -34,11 +37,15 @@ namespace UPlayable.AnimationMixer
         public float FadeDuration;
         public float ExitTime;
         public int OccupiedInputIndex;
+        public bool IsAnimatorPlayable;
+        public float ClipLength;
+        public float BaseSpeed;
     }
 
     public class LayeredPlayablesController
     {
         public int CurrentPlayableIdInLayer;
+        private int LastPlayableInPlayer = -1;
         private AnimationMixerPlayable m_rootPlayable;
         private Dictionary<int, RuntimeInputData> m_layeredPlayablesMap = new Dictionary<int, RuntimeInputData>();
         private List<RuntimeInputData> m_layeredPlayables = new List<RuntimeInputData>();
@@ -68,6 +75,9 @@ namespace UPlayable.AnimationMixer
                 ExitTime = model.ExitTime,
                 Type = PlayableInputType.Static,
                 OccupiedInputIndex = m_layeredPlayables.Count,
+                ClipLength = model.ClipLength,
+                IsAnimatorPlayable = model.IsAnimatorPlayable,
+                BaseSpeed = model.Speed,
             };
             m_layeredPlayables.Add(runtimeData);
             m_layeredPlayablesMap.Add(id, runtimeData);
@@ -96,9 +106,12 @@ namespace UPlayable.AnimationMixer
                     RestartWhenPlay = model.RestartWhenPlay,
                     TargetWeight = model.OutputTargetWeight,
                     FadeDuration = model.FadeInTime,
+                    ClipLength = model.ClipLength,
+                    IsAnimatorPlayable = model.IsAnimatorPlayable,
                     ExitTime = model.ExitTime,
                     Type = PlayableInputType.Dynamic,
                     OccupiedInputIndex = portIndex,
+                    BaseSpeed = model.Speed,
                 };
                 m_layeredPlayables.Add(runtimeData);
                 m_layeredPlayablesMap.Add(id, runtimeData);
@@ -112,11 +125,22 @@ namespace UPlayable.AnimationMixer
         {
             if (!force && m_remainExitTime > 0)
                 return;
+            if (m_layeredPlayablesMap.Keys.Count > 1)
+            {
+                LastPlayableInPlayer = CurrentPlayableIdInLayer;
+            }
+            else
+            {
+                LastPlayableInPlayer = m_layeredPlayablesMap[id].Id;
+            }
             CurrentPlayableIdInLayer = m_layeredPlayablesMap[id].Id;
+
             if (m_layeredPlayablesMap[id].RestartWhenPlay)
             {
                 m_layeredPlayablesMap[id].Playable.SetTime(0);
             }
+
+            m_layeredPlayablesMap[id].Playable.SetSpeed(m_layeredPlayablesMap[id].BaseSpeed);
             m_remainExitTime = m_layeredPlayablesMap[id].ExitTime;
             m_timeSincePlay = 0;
         }
@@ -142,6 +166,11 @@ namespace UPlayable.AnimationMixer
             p.FadeDuration = model.FadeInTime;
             p.ExitTime = model.ExitTime;
             p.RestartWhenPlay = model.RestartWhenPlay;
+            p.ClipLength = model.ClipLength;
+            p.IsAnimatorPlayable = model.IsAnimatorPlayable;
+            p.BaseSpeed = model.Speed;
+
+            m_layeredPlayablesMap[id].Playable.SetSpeed(p.BaseSpeed);
             m_layeredPlayablesMap[id] = p;
             for (int i = 0; i < m_layeredPlayables.Count; i++)
             {
@@ -159,23 +188,36 @@ namespace UPlayable.AnimationMixer
             m_timeSincePlay += dt;
             m_remainExitTime -= dt;
             var runtimePlayable = m_layeredPlayablesMap[CurrentPlayableIdInLayer];
+            var lastRuntimePlayable = LastPlayableInPlayer == -1 ? runtimePlayable : m_layeredPlayablesMap[LastPlayableInPlayer];
             m_remainExitTime = Mathf.Clamp(m_remainExitTime, 0, runtimePlayable.ExitTime);
             m_weightDiffThisFrame = runtimePlayable.FadeDuration == 0 ? 1 : dt / runtimePlayable.FadeDuration;
+
+            var currentWeight = runtimePlayable.Weight;
+            var nextWeight = Mathf.Clamp(currentWeight + m_weightDiffThisFrame, 0, runtimePlayable.TargetWeight);
+            var requireAdjustSpeed = lastRuntimePlayable.Id != runtimePlayable.Id && !lastRuntimePlayable.IsAnimatorPlayable && !runtimePlayable.IsAnimatorPlayable;
+            var mixClipLengthForTransition = Mathf.Lerp(lastRuntimePlayable.ClipLength, runtimePlayable.ClipLength, nextWeight);
 
             for (int i = 0; i < m_layeredPlayables.Count; i++)
             {
                 var p = m_layeredPlayables[i];
+                //CurrentPlaying Playable, fade in
                 if (m_layeredPlayables[i].Id == CurrentPlayableIdInLayer)
                 {
                     p.Weight += m_weightDiffThisFrame;
                     p.Weight = Mathf.Clamp(p.Weight, 0, p.TargetWeight);
                     p.SmoothWeight = Mathf.Lerp(p.SmoothWeight, p.Weight, 1f - Mathf.Exp(-25f * dt));
                 }
+                //Other Playables, fade out
                 else
                 {
                     p.Weight -= m_weightDiffThisFrame;
                     p.Weight = Mathf.Clamp(p.Weight, 0, p.TargetWeight);
                     p.SmoothWeight = Mathf.Lerp(p.SmoothWeight, p.Weight, 1f - Mathf.Exp(-25f * dt));
+                }
+
+                if ((m_layeredPlayables[i].Id == LastPlayableInPlayer || m_layeredPlayables[i].Id == CurrentPlayableIdInLayer) && requireAdjustSpeed)
+                {
+                    p.Playable.SetSpeed(p.ClipLength / mixClipLengthForTransition * p.BaseSpeed);
                 }
                 m_layeredPlayables[i] = p;
                 m_layeredPlayablesMap[m_layeredPlayables[i].Id] = p;
@@ -190,6 +232,10 @@ namespace UPlayable.AnimationMixer
                 var p = m_layeredPlayables[i];
                 if (m_layeredPlayables[i].Id != CurrentPlayableIdInLayer && p.Type == PlayableInputType.Dynamic && p.Weight < 0.001f && m_layeredPlayablesMap[CurrentPlayableIdInLayer].SmoothWeight > 0.99f)
                 {
+                    if (m_layeredPlayables[i].Id == LastPlayableInPlayer)
+                    {
+                        LastPlayableInPlayer = -1;
+                    }
                     m_recycledIndexes.Enqueue(p.OccupiedInputIndex);
                     graph.Disconnect(m_rootPlayable, p.OccupiedInputIndex);
                     m_layeredPlayablesMap.Remove(m_layeredPlayables[i].Id);

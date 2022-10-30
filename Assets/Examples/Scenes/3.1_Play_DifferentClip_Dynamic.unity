@@ -4718,11 +4718,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Target: {fileID: 1124339937}
   Clips:
-  - {fileID: 7400000, guid: e8397bfde2758f942a04edaaf7ad57ec, type: 3}
-  - {fileID: 7400006, guid: e8397bfde2758f942a04edaaf7ad57ec, type: 3}
-  - {fileID: 7400022, guid: e8397bfde2758f942a04edaaf7ad57ec, type: 3}
-  - {fileID: 7400016, guid: edd51f298e7994c498b99bd24c098f52, type: 3}
-  - {fileID: 7400000, guid: edd51f298e7994c498b99bd24c098f52, type: 3}
+  - {fileID: 7400000, guid: 26055e26f15260e4e8e0e51f50c41926, type: 3}
+  - {fileID: 7400000, guid: e52be2fa48716194ea1d9d76686005f8, type: 3}
   AutoChange: 0
 --- !u!114 &1124339937
 MonoBehaviour:
@@ -4743,6 +4740,7 @@ MonoBehaviour:
     OutputTargetWeight: 1
     FadeInTime: 0.2
     ExitTime: 0
+    ClipSpeed: 1
     RestartWhenPlay: 0
   ToClip: {fileID: 0}
 --- !u!114 &1124339938
@@ -4757,6 +4755,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18498f4614684d14b942ac9d7ad80b20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_useCustomFrameRate: 0
+  m_customFrameRate: 60
 --- !u!95 &1124339939
 Animator:
   serializedVersion: 3

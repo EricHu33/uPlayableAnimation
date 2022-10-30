@@ -12,6 +12,20 @@ namespace UPlayable.AnimationMixer
         private AnimationClipPlayable m_toPlayable;
         protected override Playable m_managerInput => m_toPlayable;
 
+        protected override void ParseSettingToModel()
+        {
+            m_model = new AnimationOutputModel
+            {
+                IsAnimatorPlayable = false,
+                ClipLength = ToClip != null ? ToClip.length : -1,
+                OutputTargetWeight = TransitionSetting.OutputTargetWeight,
+                FadeInTime = TransitionSetting.FadeInTime,
+                ExitTime = TransitionSetting.ExitTime,
+                RestartWhenPlay = TransitionSetting.RestartWhenPlay,
+                Speed = TransitionSetting.ClipSpeed,
+            };
+        }
+
         protected override void CreatePlayables()
         {
             m_toPlayable = AnimationClipPlayable.Create(m_manager.PlayableGraph, ToClip);

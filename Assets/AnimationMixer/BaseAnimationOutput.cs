@@ -15,9 +15,11 @@ namespace UPlayable.AnimationMixer
             public float FadeInTime;
             [Tooltip("Transition to other animtion will be banned for ExitTime seconds")]
             public float ExitTime;
+            public float ClipSpeed = 1;
             [Header("(non-static clip will always restart, which will ignore this flag)")]
             [Tooltip("If the animation needs to restart when Play execute")]
             public bool RestartWhenPlay;
+
         }
 
         [SerializeField]
@@ -48,7 +50,17 @@ namespace UPlayable.AnimationMixer
             }
         }
 
-        private void ParseSettingToModel()
+        public void SetSpeed(float speed)
+        {
+            TransitionSetting.ClipSpeed = speed;
+            ParseSettingToModel();
+            if (m_Id != -1 && IsStatic)
+            {
+                m_manager.UpdateInputModel(m_Id, m_model, LayerIndex);
+            }
+        }
+
+        protected virtual void ParseSettingToModel()
         {
             m_model = new AnimationOutputModel
             {
@@ -56,8 +68,8 @@ namespace UPlayable.AnimationMixer
                 FadeInTime = TransitionSetting.FadeInTime,
                 ExitTime = TransitionSetting.ExitTime,
                 RestartWhenPlay = TransitionSetting.RestartWhenPlay,
+                Speed = TransitionSetting.ClipSpeed,
             };
-
         }
 
         private void OnValidate()
@@ -75,6 +87,7 @@ namespace UPlayable.AnimationMixer
         {
             if (!IsStatic)
             {
+                ParseSettingToModel();
                 CreatePlayables();
                 m_manager.PlayDynamicPlayable(m_managerInput, m_model, LayerIndex);
             }

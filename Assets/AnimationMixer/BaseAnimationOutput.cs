@@ -30,13 +30,16 @@ namespace UPlayable.AnimationMixer
         protected bool IsStatic = false;
         [SerializeField]
         protected ClipTransitionSetting TransitionSetting = new ClipTransitionSetting();
-
         protected AnimationOutputModel m_model;
         protected AnimationMixerManager m_manager;
         protected int m_Id = -1;
         protected abstract Playable m_managerInput { get; }
         protected Animator m_animator;
         public int Id => m_Id;
+        public float BaseSpeed
+        {
+            get { return TransitionSetting.ClipSpeed; }
+        }
 
         private void Start()
         {

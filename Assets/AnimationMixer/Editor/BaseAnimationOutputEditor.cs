@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using UPlayable.AnimationMixer;
 
+[CanEditMultipleObjects]
 [CustomEditor(typeof(BaseAnimationOutput), true)]
 public class BaseAnimationOutputEditor : Editor
 {

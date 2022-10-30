@@ -20,6 +20,11 @@ namespace UPlayable.AnimationMixer.Example
 
         private void Update()
         {
+            if (!AutoChange && Input.GetKeyDown(KeyCode.Space))
+            {
+                NextClip();
+                Target.Play();
+            }
             elapsedTime += Time.deltaTime;
             if (AutoChange && elapsedTime > 1f)
             {

@@ -260,6 +260,27 @@ namespace UPlayable.AnimationMixer
         [SerializeField]
         private int m_customFrameRate = 60;
         private float m_lastEvaluteTime;
+
+        public int TargetFramerate => m_customFrameRate;
+        public bool EnabledCustomFPS
+        {
+            get
+            {
+                return m_useCustomFrameRate;
+            }
+            set
+            {
+                m_useCustomFrameRate = true;
+                SetFPS(m_customFrameRate);
+            }
+        }
+
+        public void SetFPS(float fps)
+        {
+            m_customFrameRate = (int)fps;
+            m_targetFrameRate = m_customFrameRate;
+        }
+
         private void OnValidate()
         {
             if (m_customFrameRate <= 1)

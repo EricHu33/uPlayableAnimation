@@ -118,9 +118,10 @@ Check the 6th example scene's player control unity-chan and see how it setup.
 
  - Improve the component's custom editor
  - Support unity animation rigging pacakage
- - More/Better example
+ - More/Better example (WIP)
  - Clearer document
- - Expose playable speed for easier customize
+ - ~~Expose playable speed for easier customize~~ (Done)
+ - ~~Custom framerate for each animator~~ (Done)
  
 -----
 

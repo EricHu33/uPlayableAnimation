@@ -11,12 +11,7 @@ Simply drag & drop the provided output component on animated game object. The an
 
 ***This project is still work-in-progress.*** 
 
-## How it works
- In summary, there are 2 kinds of script in this project, ***AnimationMixerManager*** class and ***AnimationOutput*** class.
- 
- Under the hood. The ***AnimationMixerManager*** create a PlayableGraph and will handle all the playable input/output inside the graph. 
- ***AnimationOutput***'s role is very simple - prepare animation settings/clip and ask the manager to play it. While the manager will handle all the life cycle of all playables on the graph. 
- 
+-----
 
 ## What this project provide
 
@@ -29,14 +24,28 @@ Simply drag & drop the provided output component on animated game object. The an
  - Custom smooth blending time for each animation clop at runtime.
 
 -----
+## Showcase
 
-For a single layer animator controller. If you want to create a locomotion with some extra states you might end up getting graph like this : 
+### Play different animation clip and different animator controller at runtime
+![ezgif-5-ab446a8f1d](https://user-images.githubusercontent.com/13420668/200158277-8ec630d2-d0fb-489c-b15d-8e8d27adc033.gif)
 
-<img src="https://user-images.githubusercontent.com/13420668/197689482-656ee0d9-e16c-47cb-8c1e-b4a6d4c1c5b7.png" width="400">
-As new state adding into your animator controller, re-wiring those state nodes become a gigantic works.
-By using the provided script( OutputComponent ) in this project, you can get rid of the animator controller completely.
+> Under the hood. The ***AnimationMixerManager*** create a PlayableGraph and will handle all the playable input/output inside the graph. 
+ ***AnimationOutput***'s role is very simple - prepare animation settings/clip and ask the manager to play it. While the manager will handle all the life cycle of all playables on the graph. 
+ 
+### Customize animation framerate & animation clip speed at runtime
+ 
+![ezgif-5-3e6e88577d](https://user-images.githubusercontent.com/13420668/200158842-e75f9c94-01a5-4411-8c23-a84096fe4564.gif)
 
-(There are cases when animator controller are still very useful, we will talk about it later)
+> For performance and other reason, you can adjust framerate of each animator at runtime. each clip's speed is customizable as well
+> Set speed to nagative will play the clip in backward!
+
+### Also works for non-character animator
+![ezgif-5-da099ab765](https://user-images.githubusercontent.com/13420668/200158936-22976b95-8af6-4801-981b-b6823d032b3d.gif)
+
+
+### Support Avatar Mask(Layerd animation) 
+![ezgif-5-d316fb8c4c](https://user-images.githubusercontent.com/13420668/200158862-6f5584de-eca0-448b-8bf1-9581e982eba5.gif)
+> The script also handle layer blending through Playables API.
 
 -----
 

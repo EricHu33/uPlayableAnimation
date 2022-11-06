@@ -24,7 +24,7 @@ Simply drag & drop the provided output component on animated game object. The an
  - Custom smooth blending time for each animation clop at runtime.
 
 -----
-## Showcase
+# Showcase
 
 ### Play different animation clip and different animator controller at runtime
 ![ezgif-5-ab446a8f1d](https://user-images.githubusercontent.com/13420668/200158277-8ec630d2-d0fb-489c-b15d-8e8d27adc033.gif)
@@ -49,7 +49,7 @@ Simply drag & drop the provided output component on animated game object. The an
 
 -----
 
-## Setup/Basic usage - Animation Clip Output
+# Setup/Basic usage - Animation Clip Output
 
 First of all, prepare a character/object with animator. And leave the animator controller as empty.
 

@@ -1,6 +1,5 @@
 # uPlayableAnimation(unity-playable-Animation) Project
-
-![ezgif-1-5d5ebe750d (1)](https://user-images.githubusercontent.com/13420668/197787147-9e4aec68-0728-4ff9-b5cb-0c1e6109ca1c.gif)
+<img src="https://user-images.githubusercontent.com/13420668/200156802-9478f7e0-3722-4764-894e-5117135d2360.png" width="600"><img src="https://user-images.githubusercontent.com/13420668/197787147-9e4aec68-0728-4ff9-b5cb-0c1e6109ca1c.gif" width="400">
 
 While Unity's animator controller's node base approach is visually straightforward.
 It did not scale well when the number of animation states start to pile up.
@@ -24,8 +23,10 @@ Simply drag & drop the provided output component on animated game object. The an
  - Transition into different animation clip without wiring the animator controller over and over again.
  - Assign/Transition animation at runtime.
  - Avatar mask (layer-animation) support.
- - Support transition between exist animator controller.
- - Custom smooth blending time for each animation clop.
+ - Custom animation framerate at runtime
+ - Custom animation speed at runtime
+ - Support transition between exist animator controller at runtime.
+ - Custom smooth blending time for each animation clop at runtime.
 
 -----
 
@@ -43,7 +44,8 @@ By using the provided script( OutputComponent ) in this project, you can get rid
 
 First of all, prepare a character/object with animator. And leave the animator controller as empty.
 
-Drag the ***AnimationClipOutput*** component next to your character's animator. Setup the clip you want and call the Play() method (for convenience, you can also use the Play button on the component inspector).
+ - Drag the ***AnimationClipOutput*** component next to your character's animator
+ - Setup the clip you want and call the ***Play()*** method (for convenience, you can also use the Play button on the component inspector).
 
 <img src="https://user-images.githubusercontent.com/13420668/197769571-a9d87ad7-1412-45d9-89e3-c983ef7c2f45.png" width="400">
 

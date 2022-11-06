@@ -5097,8 +5097,9 @@ MonoBehaviour:
   IsStatic: 0
   TransitionSetting:
     OutputTargetWeight: 1
-    FadeInTime: 0.5
+    FadeInTime: 0.3
     ExitTime: 0
+    ClipSpeed: 1
     RestartWhenPlay: 0
   AnimationControll: {fileID: 9100000, guid: 7775113be6e55584189e8440a5ea7415, type: 2}
 --- !u!114 &1215486128
@@ -5115,11 +5116,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LayerIndex: 0
   AvatarMask: {fileID: 0}
-  IsStatic: 1
+  IsStatic: 0
   TransitionSetting:
     OutputTargetWeight: 1
     FadeInTime: 0.3
     ExitTime: 0
+    ClipSpeed: 1
     RestartWhenPlay: 1
   ToClip: {fileID: 7400000, guid: 1e79f5e733df84044a45d6ab05035627, type: 3}
 --- !u!114 &1215486129
@@ -5134,6 +5136,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18498f4614684d14b942ac9d7ad80b20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_useCustomFrameRate: 0
+  m_customFrameRate: 60
 --- !u!95 &1215486130
 Animator:
   serializedVersion: 3
@@ -5147,7 +5151,7 @@ Animator:
   m_Controller: {fileID: 0}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -5192,6 +5196,7 @@ MonoBehaviour:
     OutputTargetWeight: 1
     FadeInTime: 0.3
     ExitTime: 0
+    ClipSpeed: 1
     RestartWhenPlay: 0
   ToClip: {fileID: 7400000, guid: 8bf916c92a6742d4ea62fd210c3fd0e6, type: 3}
 --- !u!1 &1220721530

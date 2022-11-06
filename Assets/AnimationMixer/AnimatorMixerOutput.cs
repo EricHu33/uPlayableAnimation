@@ -18,6 +18,20 @@ namespace UPlayable.AnimationMixer
         private AnimationClipPlayable m_fromPlayable;
         private AnimatorControllerPlayable m_toPlayable;
 
+        protected override void ParseSettingToModel()
+        {
+            m_model = new AnimationOutputModel
+            {
+                IsAnimatorPlayable = true,
+                ClipLength = 0,
+                OutputTargetWeight = TransitionSetting.OutputTargetWeight,
+                FadeInTime = TransitionSetting.FadeInTime,
+                ExitTime = TransitionSetting.ExitTime,
+                RestartWhenPlay = TransitionSetting.RestartWhenPlay,
+                Speed = TransitionSetting.ClipSpeed,
+            };
+        }
+
         private void Update()
         {
             if (!m_mixerPlayable.IsValid())

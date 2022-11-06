@@ -44,7 +44,8 @@ By using the provided script( OutputComponent ) in this project, you can get rid
 
 First of all, prepare a character/object with animator. And leave the animator controller as empty.
 
-Drag the ***AnimationClipOutput*** component next to your character's animator. Setup the clip you want and call the Play() method (for convenience, you can also use the Play button on the component inspector).
+ - Drag the ***AnimationClipOutput*** component next to your character's animator
+ - Setup the clip you want and call the ***Play()*** method (for convenience, you can also use the Play button on the component inspector).
 
 <img src="https://user-images.githubusercontent.com/13420668/197769571-a9d87ad7-1412-45d9-89e3-c983ef7c2f45.png" width="400">
 

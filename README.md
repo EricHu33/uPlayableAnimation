@@ -22,7 +22,7 @@ Simply drag & drop the provided output component on animated game object. The an
  - Custom animation speed at runtime
  - Support transition between exist animator controller at runtime.
  - Custom smooth blending time for each animation clop at runtime.
-
+ - (new) FixedTimeOffsset option for offseting target animtion's start frametime after transition.
 -----
 # Showcase
 

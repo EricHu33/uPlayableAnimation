@@ -13,6 +13,8 @@ namespace UPlayable.AnimationMixer
             public float OutputTargetWeight = 1;
             [Tooltip("Blending time to other animation")]
             public float FadeInTime;
+            [Tooltip("Starting time offset in seconds")]
+            public float FixedTimeOffset;
             [Tooltip("Transition to other animtion will be banned for ExitTime seconds")]
             public float ExitTime;
             public float ClipSpeed = 1;
@@ -63,6 +65,16 @@ namespace UPlayable.AnimationMixer
             }
         }
 
+        public void SetFixedTimeOffset(float fixedTimeOffset)
+        {
+            TransitionSetting.FixedTimeOffset = fixedTimeOffset;
+            ParseSettingToModel();
+            if (m_Id != -1 && IsStatic)
+            {
+                m_manager.UpdateInputModel(m_Id, m_model, LayerIndex);
+            }
+        }
+
         protected virtual void ParseSettingToModel()
         {
             m_model = new AnimationOutputModel
@@ -71,6 +83,7 @@ namespace UPlayable.AnimationMixer
                 FadeInTime = TransitionSetting.FadeInTime,
                 ExitTime = TransitionSetting.ExitTime,
                 RestartWhenPlay = TransitionSetting.RestartWhenPlay,
+                FixedTimeOffset = TransitionSetting.FixedTimeOffset,
                 Speed = TransitionSetting.ClipSpeed,
             };
         }

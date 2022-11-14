@@ -21,6 +21,7 @@ namespace UPlayable.AnimationMixer
                 OutputTargetWeight = TransitionSetting.OutputTargetWeight,
                 FadeInTime = TransitionSetting.FadeInTime,
                 ExitTime = TransitionSetting.ExitTime,
+                FixedTimeOffset = TransitionSetting.FixedTimeOffset,
                 RestartWhenPlay = TransitionSetting.RestartWhenPlay,
                 Speed = TransitionSetting.ClipSpeed,
             };

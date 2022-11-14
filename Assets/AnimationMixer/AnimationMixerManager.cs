@@ -13,6 +13,7 @@ namespace UPlayable.AnimationMixer
         public float ClipLength;
         public float OutputTargetWeight;
         public float FadeInTime;
+        public float FixedTimeOffset;
         public float ExitTime;
         public float Speed;
         [Header("(non-static clip will always restart)")]
@@ -35,6 +36,7 @@ namespace UPlayable.AnimationMixer
         public float SmoothWeight;
         public float TargetWeight;
         public float FadeDuration;
+        public float FixedTimeOffset;
         public float ExitTime;
         public int OccupiedInputIndex;
         public bool IsAnimatorPlayable;
@@ -72,6 +74,7 @@ namespace UPlayable.AnimationMixer
                 RestartWhenPlay = model.RestartWhenPlay,
                 TargetWeight = model.OutputTargetWeight,
                 FadeDuration = model.FadeInTime,
+                FixedTimeOffset = model.FixedTimeOffset,
                 ExitTime = model.ExitTime,
                 Type = PlayableInputType.Static,
                 OccupiedInputIndex = m_layeredPlayables.Count,
@@ -96,7 +99,7 @@ namespace UPlayable.AnimationMixer
                     return;
                 }
                 m_timeSincePlay = 0;
-                playable.SetTime(0);
+                playable.SetTime(model.FixedTimeOffset);
                 var runtimeData = new RuntimeInputData
                 {
                     Id = id,
@@ -106,6 +109,7 @@ namespace UPlayable.AnimationMixer
                     RestartWhenPlay = model.RestartWhenPlay,
                     TargetWeight = model.OutputTargetWeight,
                     FadeDuration = model.FadeInTime,
+                    FixedTimeOffset = model.FixedTimeOffset,
                     ClipLength = model.ClipLength,
                     IsAnimatorPlayable = model.IsAnimatorPlayable,
                     ExitTime = model.ExitTime,
@@ -137,7 +141,7 @@ namespace UPlayable.AnimationMixer
 
             if (m_layeredPlayablesMap[id].RestartWhenPlay)
             {
-                m_layeredPlayablesMap[id].Playable.SetTime(0);
+                m_layeredPlayablesMap[id].Playable.SetTime(m_layeredPlayablesMap[id].FixedTimeOffset);
             }
 
             m_layeredPlayablesMap[id].Playable.SetSpeed(m_layeredPlayablesMap[id].BaseSpeed);
@@ -167,6 +171,7 @@ namespace UPlayable.AnimationMixer
             p.ExitTime = model.ExitTime;
             p.RestartWhenPlay = model.RestartWhenPlay;
             p.ClipLength = model.ClipLength;
+            p.FixedTimeOffset = model.FixedTimeOffset;
             p.IsAnimatorPlayable = model.IsAnimatorPlayable;
             p.BaseSpeed = model.Speed;
 

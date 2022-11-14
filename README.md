@@ -20,9 +20,9 @@ Simply drag & drop the provided output component on animated game object. The an
  - Avatar mask (layer-animation) support.
  - Custom animation framerate at runtime
  - Custom animation speed at runtime
- - Support transition between exist animator controller at runtime.
- - Custom smooth blending time for each animation clop at runtime.
- - (new) FixedTimeOffsset option for offseting target animtion's start frametime after transition.
+ - Support crossfade transition between exist animator controller at runtime.
+ - Custom crossfade time for each animation clip at runtime.
+ - (new) custom FixedTimeOffsset option for offseting target animation's start frametime when perform crossfade.
 -----
 # Showcase
 

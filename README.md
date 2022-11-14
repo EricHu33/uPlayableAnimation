@@ -9,7 +9,10 @@ By using Unity's [Playables API](https://docs.unity3d.com/Manual/Playables.html)
 
 Simply drag & drop the provided output component on animated game object. The animator can easily blend into any state at runtime. 
 
-***This project is still work-in-progress.*** 
+**This project is still work-in-progress.**
+
+### You can provide your feedback at the [Unity forum post](https://forum.unity.com/threads/uplayableanimation-playableapi-animation-system.1353557/) ###
+
 
 -----
 

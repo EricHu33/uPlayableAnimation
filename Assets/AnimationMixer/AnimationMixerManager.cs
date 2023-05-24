@@ -372,6 +372,11 @@ namespace UPlayable.AnimationMixer
         {
             return m_layerControllers[layerIndex].CurrentPlayableIdInLayer == id;
         }
+        
+        public int CurrentPlayableId(int layerIndex = 0)
+        {
+            return m_layerControllers[layerIndex].CurrentPlayableIdInLayer;
+        }
 
         private void Update()
         {

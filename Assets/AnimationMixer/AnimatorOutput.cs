@@ -30,7 +30,7 @@ namespace UPlayable.AnimationMixer
         {
             m_toPlayable = AnimatorControllerPlayable.Create(m_manager.PlayableGraph, AnimationControll);
             m_toPlayable.SetTime(0f);
-            m_Id = Animator.StringToHash(AnimationControll.name + Time.time.ToString());
+            m_Id = m_toPlayable.GetHashCode();
         }
     }
 }

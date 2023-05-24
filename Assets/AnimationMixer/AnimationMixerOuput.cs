@@ -58,7 +58,7 @@ namespace UPlayable.AnimationMixer
 
             m_manager.PlayableGraph.Connect(m_fromPlayable, 0, m_mixerPlayable, 0);
             m_manager.PlayableGraph.Connect(m_toPlayable, 0, m_mixerPlayable, 1);
-            m_Id = Animator.StringToHash(FromClip.name + ToClip.name + Time.time.ToString());
+            m_Id = m_mixerPlayable.GetHashCode();
             if (LayerIndex != 0 && AvatarMask != null)
             {
                 m_manager.SetLayerAdditive((uint)LayerIndex, false);

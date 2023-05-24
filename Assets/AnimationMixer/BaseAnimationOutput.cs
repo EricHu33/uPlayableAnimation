@@ -15,7 +15,7 @@ namespace UPlayable.AnimationMixer
             public float FadeInTime;
             [Tooltip("Starting time offset in seconds")]
             public float FixedTimeOffset;
-            [Tooltip("Transition to other animtion will be banned for ExitTime seconds")]
+            [Tooltip("Transition to other animation will be banned for ExitTime seconds")]
             public float ExitTime;
             public float ClipSpeed = 1;
             [Header("(non-static clip will always restart, which will ignore this flag)")]

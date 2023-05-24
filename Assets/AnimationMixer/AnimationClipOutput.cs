@@ -31,7 +31,7 @@ namespace UPlayable.AnimationMixer
         {
             m_toPlayable = AnimationClipPlayable.Create(m_manager.PlayableGraph, ToClip);
             m_toPlayable.SetTime(0f);
-            m_Id = Animator.StringToHash(ToClip.name + Time.time.ToString());
+            m_Id = m_toPlayable.GetHashCode();
         }
     }
 

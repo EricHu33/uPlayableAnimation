@@ -14,6 +14,11 @@ Simply drag and drop the provided ***AnimationClipOutput*** script onto a game o
 -----
 ## How to install
 
+### From source
+
+1. Download ZIP archieve using “Code” green button on the main github page.
+2. Copy past “Assets/Plugins/uPlayableAnimation” folder to your project.
+
 ### Package Manager
 
 1. Open Package Manager at Unity project.

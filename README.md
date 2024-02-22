@@ -12,6 +12,15 @@ Simply drag and drop the provided ***AnimationClipOutput*** script onto a game o
 ### You can provide your feedback at the [Unity forum post](https://forum.unity.com/threads/uplayableanimation-playableapi-animation-system.1353557/) ###
 
 -----
+## How to install
+
+### Package Manager
+
+1. Open Package Manager at Unity project.
+2. Click on “plus” at left up corner.
+3. Choose “Add package from git URL…”, past link https://github.com/{Company}/uPlayableAnimation.git?path=/Assets/Plugins/uPlayableAnimation ****and click “add” button.
+4. For more info you could refer to: “[**https://docs.unity3d.com/Manual/upm-git.html](https://docs.unity3d.com/Manual/upm-git.html)”.**
+
 ## This project provides
 
  - Transition into different animation clips without wiring the animator controller over and over again.

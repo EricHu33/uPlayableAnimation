@@ -10,7 +10,7 @@
     {
       "displayName": "Examples",
       "description": "Contains all examples of using plugin",
-      "path": "../../Examples"
+      "path": "Examples"
     }
   ]
 }

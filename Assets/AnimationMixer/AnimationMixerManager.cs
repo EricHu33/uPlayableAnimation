@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -52,7 +53,6 @@ namespace UPlayable.AnimationMixer
         private Dictionary<int, RuntimeInputData> m_layeredPlayablesMap = new Dictionary<int, RuntimeInputData>();
         private List<RuntimeInputData> m_layeredPlayables = new List<RuntimeInputData>();
         private float m_remainExitTime;
-        private float m_timeSincePlay;
         private float m_weightDiffThisFrame;
         private Queue<int> m_recycledIndexes = new Queue<int>();
         private bool m_hasStatic;
@@ -98,7 +98,6 @@ namespace UPlayable.AnimationMixer
                 {
                     return;
                 }
-                m_timeSincePlay = 0;
                 playable.SetTime(model.FixedTimeOffset);
                 var runtimeData = new RuntimeInputData
                 {
@@ -145,8 +144,8 @@ namespace UPlayable.AnimationMixer
             }
 
             m_layeredPlayablesMap[id].Playable.SetSpeed(m_layeredPlayablesMap[id].BaseSpeed);
+            m_layeredPlayablesMap[id].Playable.SetDuration(m_layeredPlayablesMap[id].ClipLength);
             m_remainExitTime = m_layeredPlayablesMap[id].ExitTime;
-            m_timeSincePlay = 0;
         }
 
         public bool IsCurrentPlayableCompleted()
@@ -155,7 +154,7 @@ namespace UPlayable.AnimationMixer
                 return true;
             if (m_hasStatic)
                 return false;
-            return m_timeSincePlay >= m_layeredPlayablesMap[CurrentPlayableIdInLayer].Playable.GetDuration();
+            return m_layeredPlayablesMap[CurrentPlayableIdInLayer].Playable.IsDone();
         }
 
         public bool IsCurrentPlaying(int id)
@@ -190,7 +189,6 @@ namespace UPlayable.AnimationMixer
         {
             if (m_layeredPlayables.Count == 0)
                 return;
-            m_timeSincePlay += dt;
             m_remainExitTime -= dt;
             var runtimePlayable = m_layeredPlayablesMap[CurrentPlayableIdInLayer];
             var lastRuntimePlayable = LastPlayableInPlayer == -1 ? runtimePlayable : m_layeredPlayablesMap[LastPlayableInPlayer];
@@ -241,6 +239,7 @@ namespace UPlayable.AnimationMixer
                     {
                         LastPlayableInPlayer = -1;
                     }
+
                     m_recycledIndexes.Enqueue(p.OccupiedInputIndex);
                     graph.Disconnect(m_rootPlayable, p.OccupiedInputIndex);
                     m_layeredPlayablesMap.Remove(m_layeredPlayables[i].Id);

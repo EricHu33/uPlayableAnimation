@@ -17,6 +17,7 @@ namespace UPlayable.AnimationMixer
             m_model = new AnimationOutputModel
             {
                 IsAnimatorPlayable = false,
+                ClipLooped = ToClip != null ? ToClip.isLooping : false,
                 ClipLength = ToClip != null ? ToClip.length : -1,
                 OutputTargetWeight = TransitionSetting.OutputTargetWeight,
                 FadeInTime = TransitionSetting.FadeInTime,

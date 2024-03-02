@@ -11,6 +11,7 @@ namespace UPlayable.AnimationMixer
     public struct AnimationOutputModel
     {
         public bool IsAnimatorPlayable;
+        public bool ClipLooped;
         public float ClipLength;
         public float OutputTargetWeight;
         public float FadeInTime;
@@ -41,6 +42,7 @@ namespace UPlayable.AnimationMixer
         public float ExitTime;
         public int OccupiedInputIndex;
         public bool IsAnimatorPlayable;
+        public bool ClipLooped;
         public float ClipLength;
         public float BaseSpeed;
     }
@@ -78,6 +80,7 @@ namespace UPlayable.AnimationMixer
                 ExitTime = model.ExitTime,
                 Type = PlayableInputType.Static,
                 OccupiedInputIndex = m_layeredPlayables.Count,
+                ClipLooped = model.ClipLooped,
                 ClipLength = model.ClipLength,
                 IsAnimatorPlayable = model.IsAnimatorPlayable,
                 BaseSpeed = model.Speed,
@@ -109,6 +112,7 @@ namespace UPlayable.AnimationMixer
                     TargetWeight = model.OutputTargetWeight,
                     FadeDuration = model.FadeInTime,
                     FixedTimeOffset = model.FixedTimeOffset,
+                    ClipLooped = model.ClipLooped,
                     ClipLength = model.ClipLength,
                     IsAnimatorPlayable = model.IsAnimatorPlayable,
                     ExitTime = model.ExitTime,
@@ -144,7 +148,10 @@ namespace UPlayable.AnimationMixer
             }
 
             m_layeredPlayablesMap[id].Playable.SetSpeed(m_layeredPlayablesMap[id].BaseSpeed);
-            m_layeredPlayablesMap[id].Playable.SetDuration(m_layeredPlayablesMap[id].ClipLength);
+
+            if(!m_layeredPlayablesMap[CurrentPlayableIdInLayer].ClipLooped)
+                m_layeredPlayablesMap[id].Playable.SetDuration(m_layeredPlayablesMap[id].ClipLength);
+
             m_remainExitTime = m_layeredPlayablesMap[id].ExitTime;
         }
 
@@ -154,7 +161,9 @@ namespace UPlayable.AnimationMixer
                 return true;
             if (m_hasStatic)
                 return false;
-            return m_layeredPlayablesMap[CurrentPlayableIdInLayer].Playable.IsDone();
+
+            Debug.Log(m_layeredPlayablesMap[CurrentPlayableIdInLayer].Playable.IsDone() && !m_layeredPlayablesMap[CurrentPlayableIdInLayer].ClipLooped);
+            return m_layeredPlayablesMap[CurrentPlayableIdInLayer].Playable.IsDone() && !m_layeredPlayablesMap[CurrentPlayableIdInLayer].ClipLooped;
         }
 
         public bool IsCurrentPlaying(int id)

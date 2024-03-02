@@ -162,7 +162,6 @@ namespace UPlayable.AnimationMixer
             if (m_hasStatic)
                 return false;
 
-            Debug.Log(m_layeredPlayablesMap[CurrentPlayableIdInLayer].Playable.IsDone() && !m_layeredPlayablesMap[CurrentPlayableIdInLayer].ClipLooped);
             return m_layeredPlayablesMap[CurrentPlayableIdInLayer].Playable.IsDone() && !m_layeredPlayablesMap[CurrentPlayableIdInLayer].ClipLooped;
         }
 

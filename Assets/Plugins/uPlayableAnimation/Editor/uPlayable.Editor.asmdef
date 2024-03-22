@@ -1,0 +1,16 @@
+{
+    "name": "uPlayable.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:60f5913ade7e9fb49add342e4e576626"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

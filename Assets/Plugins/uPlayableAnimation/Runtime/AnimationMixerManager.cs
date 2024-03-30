@@ -350,7 +350,7 @@ namespace UPlayable.AnimationMixer
 
         public void AddStaticPlayable(int Id, Playable playable, AnimationOutputModel model, int layerIndex = 0)
         {
-            if (layerIndex > m_layerControllers.Count - 1)
+            while (layerIndex > m_layerControllers.Count - 1)
                 AddLayerControllerToGraph();
 
             m_layerControllers[layerIndex].AddStaticPlayable(Id, playable, model, ref PlayableGraph);
@@ -358,7 +358,7 @@ namespace UPlayable.AnimationMixer
 
         public void PlayDynamicPlayable(Playable playable, AnimationOutputModel model, int layerIndex = 0)
         {
-            if (layerIndex > m_layerControllers.Count - 1)
+            while (layerIndex > m_layerControllers.Count - 1)
                 AddLayerControllerToGraph();
 
             m_layerControllers[layerIndex].PlayDynamicPlayable(playable, model, ref PlayableGraph);
